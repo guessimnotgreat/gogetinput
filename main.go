@@ -4,12 +4,29 @@ import (
 	"bufio"
 	"fmt"
 	"gogetinput/note"
+	"gogetinput/todo"
 	"os"
 	"strings"
 )
 
 func main() {
-	title, content := getNoteDate()
+	title, content := getNoteData()
+	todoText := getUserInput("Todo text:")
+
+	todo, err := todo.New(todoText)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	todo.Display()
+	err = todo.Save()
+	if err != nil {
+		fmt.Println("saving the todo failed")
+		return
+	}
+
+	fmt.Println("saving the todo succedded!")
 
 	userNote, err := note.New(title, content)
 	if err != nil {
@@ -27,7 +44,7 @@ func main() {
 	fmt.Println("saving the note succedded!")
 }
 
-func getNoteDate() (string, string) {
+func getNoteData() (string, string) {
 	title := getUserInput("Note title:")
 	content := getUserInput("Note content:")
 
